@@ -1,13 +1,13 @@
 [tool.poetry]
-name = "your_package_name"
+name = "super_map"
 version = "0.1.0"
-description = "YOUR_DESCRIPTION"
+description = "Like dict, but easier"
 authors=[]
 
 [tool.extra]
-author='YOUR_NAME_14057'
-author_email='YOUR_EMAIL'
-url='YOUR_GIT_REPO_URL'
+author='Jeff Hykin'
+author_email='jeff.hykin@gmail.com'
+url='https://github.com/jeff-hykin/super_map.git'
 license = "MIT"
 
 [tool.poetry.dependencies]

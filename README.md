@@ -1,32 +1,31 @@
 # What is this?
 
-A template for python packages
-
-# How do I fill out this template?
-
-1. Change the `pyproject.toml` file (package name, version, etc)
-2. Change the `./main/your_package_name` folder
-3. Edit the `./main/your_package_name/__init__.py` file, and change the `from your_package_name.main import *`
-4. Open the `./main/setup.py` and edit the `install_requires=` part to include dependencies
-5. Edit this readme (it will be the front page of the package)
-6. Edit the `./main/your_package_name/main.py` to have your library in it
-7. Run `project local_install` to install what you just made
-8. Run `project publish` to release your package
-
-
-## (Readme template below)
-
-# What is this?
-
-(Your answer here)
+A python package that provides an alternative to `dict` that is much easier for lazy people to use.
 
 # How do I use this?
 
-`pip install your_package_name`
+`pip install super_map`
 
 
 ```python
-from your_package_name import something
+from super_map import Map
 
-# example of how to use your package here
+item = Map()
+
+# no error
+item["value"]["subvalue"] = True
+
+# prints true
+print(item.value.subvalue == item["value"]["subvalue"]) # prints true
+
+# dont need .items()
+for each_key, each_value in item:
+    print(each_key)
+
+
+value = item.a.b.c.d.e
+if not value:
+    # this prints out
+    print("item.a.b.c.d.e doesn't exist")
+    
 ```
