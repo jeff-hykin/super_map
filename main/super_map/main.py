@@ -1,4 +1,4 @@
-class Map(dict):
+class Map():
     class SecretKey:
         pass
 
@@ -24,6 +24,9 @@ class Map(dict):
         pass
     
     class Default(SecretKey):
+        pass
+    
+    class Dict(SecretKey):
         pass
         
     def __init__(self, *args, **kwargs):
@@ -84,6 +87,8 @@ class Map(dict):
             return data.keys()
         if key == Map.Values:
             return data.values()
+        if key == Map.Dict:
+            return data
         if key == Map.Merge:
             return lambda *args: [ data.update(each) for each in args ]
         if key in Map.SecretKey.__subclasses__():

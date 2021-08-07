@@ -22,12 +22,18 @@ print(item.value.subvalue == item["value"]["subvalue"]) # prints true
 for each_key, each_value in item:
     print(each_key)
 
+for each_key in item[Map.Keys]:
+    print(each_key)
+
+for each_key in item[Map.Values]:
+    print(each_key)
 
 value = item.a.b.c.d.e
 if not value:
     # this prints out
     print("item.a.b.c.d.e doesn't exist")
 
+item_as_dict = item[Map.Dict]
 
 item.f.g.h += 1
 print('will print out 1:', item.f.g.h)
