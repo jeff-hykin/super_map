@@ -27,5 +27,8 @@ value = item.a.b.c.d.e
 if not value:
     # this prints out
     print("item.a.b.c.d.e doesn't exist")
-    
+
+
+item.f.g.h += 1
+print('will print out 1:', item.f.g.h)
 ```
