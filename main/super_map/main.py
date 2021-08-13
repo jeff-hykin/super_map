@@ -1,3 +1,94 @@
+def indent(string, by):
+    indent_string = (" "*by)
+    return indent_string + string.replace("\n", "\n"+indent_string)
+
+def stringify(value):
+    onelineify_threshold = 50 # characters (of inner content)
+    length = 0
+    if isinstance(value, str):
+        return f'"{value}"'
+    elif isinstance(value, dict):
+        if len(value) == 0:
+            return "{}"
+        items = value if isinstance(value, Map) else value.items()
+        output = "{\n"
+        for each_key, each_value in items:
+            element_string = stringify(each_key) + ": " + stringify(each_value)
+            length += len(element_string)+2
+            output += indent(element_string, by=4) + ", \n"
+        output += "}"
+        if length < onelineify_threshold:
+            output = output.replace("\n    ","").replace("\n","")
+        return output
+    elif isinstance(value, list):
+        if len(value) == 0:
+            return "[]"
+        output = "[\n"
+        for each_value in value:
+            element_string = stringify(each_value)
+            length += len(element_string)+2
+            output += indent(element_string, by=4) + ", \n"
+        output += "]"
+        if length < onelineify_threshold:
+            output = output.replace("\n    ","").replace("\n","")
+        return output
+    elif isinstance(value, set):
+        if len(value) == 0:
+            return "set([])"
+        output = "set([\n"
+        for each_value in value:
+            element_string = stringify(each_value)
+            length += len(element_string)+2
+            output += indent(element_string, by=4) + ", \n"
+        output += "])"
+        if length < onelineify_threshold:
+            output = output.replace("\n    ","").replace("\n","")
+        return output
+    elif isinstance(value, tuple):
+        if len(value) == 0:
+            return "tuple()"
+        output = "(\n"
+        for each_value in value:
+            element_string = stringify(each_value)
+            length += len(element_string)+2
+            output += indent(element_string, by=4) + ", \n"
+        output += ")"
+        if length < onelineify_threshold:
+            output = output.replace("\n    ","").replace("\n","")
+        return output
+    else:
+        try:
+            debug_string = value.__repr__()
+        except Exception as error:
+            from io import StringIO
+            import builtins
+            string_stream = StringIO()
+            builtins.print(*args, **kwargs, file=string_stream)
+            debug_string = string_stream.getvalue()
+        
+        # TODO: handle "<slot wrapper '__repr__' of 'object' objects>"
+        if debug_string.startswith("<class") and hasattr(value, "__name__"):
+            return value.__name__
+        if debug_string.startswith("<function <lambda>"):
+            return "(lambda)"
+        if debug_string.startswith("<function") and hasattr(value, "__name__"):
+            return value.__name__
+        if debug_string.startswith("<module") and hasattr(value, "__name__"):
+            _, *file_path, _, _ = debug_string.split(" ")[-1]
+            file_path = "".join(file_path)
+            return f"module(name='{value.__name__}', path='{file_path}')"
+        
+        space_split = debug_string.split(" ")
+        if len(space_split) >= 4 and debug_string[0] == "<" and debug_string[-1] == ">":
+            
+            if space_split[-1].startswith("0x") and space_split[-1] == "at":
+                _, *name_pieces = space_split[0]
+                *parts, name = "".join(name_pieces).split(".")
+                parts_str = ".".join(parts)
+                return f'{name}(from="{parts_str}")'
+        
+        return debug_string
+
 class Map():
     class SecretKey:
         pass
@@ -159,98 +250,6 @@ class Map():
         data, secrets = super().__getattribute__("d")
         if len(data) == 0:
             return "{}"
-        
-        def indent(string, by):
-            indent = (" "*by)
-            return indent + string.replace("\n", "\n"+indent)
-        
-        def stringify(value):
-            onelineify_threshold = 50 # characters (of inner content)
-            length = 0
-            if isinstance(value, str):
-                return f'"{value}"'
-            elif isinstance(value, dict):
-                if len(value) == 0:
-                    return "{}"
-                items = value if isinstance(value, Map) else value.items()
-                output = "{\n"
-                for each_key, each_value in items:
-                    element_string = stringify(each_key) + ": " + stringify(each_value)
-                    length += len(element_string)+2
-                    output += indent(element_string, by=4) + ", \n"
-                output += "}"
-                if length < onelineify_threshold:
-                    output = output.replace("\n    ","").replace("\n","")
-                return output
-            elif isinstance(value, list):
-                if len(value) == 0:
-                    return "[]"
-                output = "[\n"
-                for each_value in value:
-                    element_string = stringify(each_value)
-                    length += len(element_string)+2
-                    output += indent(element_string, by=4) + ", \n"
-                output += "]"
-                if length < onelineify_threshold:
-                    output = output.replace("\n    ","").replace("\n","")
-                return output
-            elif isinstance(value, set):
-                if len(value) == 0:
-                    return "set([])"
-                output = "set([\n"
-                for each_value in value:
-                    element_string = stringify(each_value)
-                    length += len(element_string)+2
-                    output += indent(element_string, by=4) + ", \n"
-                output += "])"
-                if length < onelineify_threshold:
-                    output = output.replace("\n    ","").replace("\n","")
-                return output
-            elif isinstance(value, tuple):
-                if len(value) == 0:
-                    return "tuple()"
-                output = "(\n"
-                for each_value in value:
-                    element_string = stringify(each_value)
-                    length += len(element_string)+2
-                    output += indent(element_string, by=4) + ", \n"
-                output += ")"
-                if length < onelineify_threshold:
-                    output = output.replace("\n    ","").replace("\n","")
-                return output
-            else:
-                try:
-                    debug_string = value.__repr__()
-                except Exception as error:
-                    from io import StringIO
-                    import builtins
-                    string_stream = StringIO()
-                    builtins.print(*args, **kwargs, file=string_stream)
-                    debug_string = string_stream.getvalue()
-                
-                # TODO: handle "<slot wrapper '__repr__' of 'object' objects>"
-                if debug_string.startswith("<class") and hasattr(value, "__name__"):
-                    return value.__name__
-                if debug_string.startswith("<function <lambda>"):
-                    return "(lambda)"
-                if debug_string.startswith("<function") and hasattr(value, "__name__"):
-                    return value.__name__
-                if debug_string.startswith("<module") and hasattr(value, "__name__"):
-                    _, *file_path, _, _ = debug_string.split(" ")[-1]
-                    file_path = "".join(file_path)
-                    return f"module(name='{value.__name__}', path='{file_path}')"
-                
-                space_split = debug_string.split(" ")
-                if len(space_split) >= 4 and debug_string[0] == "<" and debug_string[-1] == ">":
-                    
-                    if space_split[-1].startswith("0x") and space_split[-1] == "at":
-                        _, *name_pieces = space_split[0]
-                        *parts, name = "".join(name_pieces).split(".")
-                        parts_str = ".".join(parts)
-                        return f'{name}(from="{parts_str}")'
-                
-                return debug_string
-        
         return stringify(data)
     
     def __eq__(self, other):
@@ -268,3 +267,25 @@ class Map():
                 data.update(other)
                 return self
             # TODO: should probably be an error
+
+class LazyDict(dict):
+    def __init__(self, *args, **kwargs):
+        super(LazyDict, self).__init__(*args, **kwargs)
+        self.__dict__ = self
+    
+    def __getitem__(self, key):
+        return self.__dict__.get(key, None)
+        
+    def __delitem__(self, key):
+        try:
+            del self.__dict__[key]
+        except Exception as error:
+            pass
+    
+    def __str__(self):
+        if len(self.__dict__) == 0:
+            return "{}"
+        return stringify(self.__dict__)
+    
+    def __repr__(self):
+        return self.__str__()
