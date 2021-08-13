@@ -8,7 +8,7 @@ A python package that provides an alternative to `dict` that is much easier for 
 
 
 ```python
-from super_map import Map
+from super_map import Map, LazyDict
 
 item = Map()
 

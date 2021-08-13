@@ -7,6 +7,19 @@ def stringify(value):
     length = 0
     if isinstance(value, str):
         return f'"{value}"'
+    elif isinstance(value, Map):
+        if len(value) == 0:
+            return "{}"
+        items = value if isinstance(value, Map) else value.items()
+        output = "{\n"
+        for each_key, each_value in items:
+            element_string = stringify(each_key) + ": " + stringify(each_value)
+            length += len(element_string)+2
+            output += indent(element_string, by=4) + ", \n"
+        output += "}"
+        if length < onelineify_threshold:
+            output = output.replace("\n    ","").replace("\n","")
+        return output
     elif isinstance(value, dict):
         if len(value) == 0:
             return "{}"
@@ -289,3 +302,8 @@ class LazyDict(dict):
     
     def __repr__(self):
         return self.__str__()
+    
+    def merge(self, other_dict):
+        self.__dict__.update(other_dict)
+        return self
+
