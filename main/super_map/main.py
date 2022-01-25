@@ -120,7 +120,7 @@ class Map():
         
     def __init__(self, *args, **kwargs):
         super(Map, self).__init__()
-        first_arg = args[0]
+        first_arg = args[0] if len(args) > 0 else None
         secrets = args[1] if first_arg == Map.SecretKey and len(args) > 1 else {}
         secrets[Map.Untouched] = len(kwargs) == 0
         secrets[Map.UninitilizedChildren] = {}

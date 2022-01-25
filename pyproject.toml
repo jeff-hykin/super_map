@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "super_map"
-version = "1.2.0"
+version = "1.2.1"
 description = "Like dict, but easier"
 authors=[]
 
