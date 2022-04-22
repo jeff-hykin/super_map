@@ -280,13 +280,22 @@ class Map():
                 # TODO: should probably be an error
                 pass
 
+defaulters = {}
 class LazyDict(dict):
+    
     def __init__(self, *args, **kwargs):
+        # default vaue
         super(LazyDict, self).__init__(*args, **kwargs)
         self.__dict__ = self
+        defaulters[id(self)] = lambda key: None
     
     def __getitem__(self, key):
-        return self.__dict__.get(key, None)
+        # defaulter value
+        defaulter = defaulters.get(id(self))
+        if defaulter:
+            if key not in self.__dict__:
+                return defaulter(key)
+        return self.__dict__.get(key)
         
     def __delitem__(self, key):
         try:
@@ -302,6 +311,17 @@ class LazyDict(dict):
     def __repr__(self):
         return self.__str__()
     
-    def merge(self, other_dict):
+    def merge(self, other_dict, **kwargs):
         self.__dict__.update(other_dict)
+        self.__dict__.update(kwargs)
         return self
+    
+    def setdefault(self, *args, **kwargs):
+        if len(args) == 1:
+            if callable(args[0]):
+                defaulters[id(self)] = args[0]
+            else:
+                defaulters[id(self)] = lambda key: args[0]
+            return self
+        else:
+            return self.__dict__.setdefault(*args, **kwargs)
