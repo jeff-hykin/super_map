@@ -114,6 +114,14 @@ test = ["pytest", "pytest-trio", "pytest-asyncio", "testpath", "trio", "async-ti
 trio = ["trio", "async-generator"]
 
 [[package]]
+name = "json-fix"
+version = "0.1.3"
+description = "allow custom class json behavior on builtin json object"
+category = "main"
+optional = false
+python-versions = ">=3.6"
+
+[[package]]
 name = "keyring"
 version = "23.2.1"
 description = "Store and access your passwords safely."
@@ -360,8 +368,8 @@ testing = ["pytest (>=4.6)", "pytest-checkdocs (>=2.4)", "pytest-flake8", "pytes
 
 [metadata]
 lock-version = "1.1"
-python-versions = ">=3.7,<3.10"
-content-hash = "8e2a199f95e1d9bd80f7c9ecde358cfad1b5c91c978a8b8d4ab22ad73ed1a947"
+python-versions = ">=3.7,<3.12"
+content-hash = "9a942a7f7f271eca73038ae32b704fd30e6d9887d06668dda64446457c97a36c"
 
 [metadata.files]
 bleach = [
@@ -434,6 +442,7 @@ cryptography = [
     {file = "cryptography-3.4.8-cp36-abi3-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:34dae04a0dce5730d8eb7894eab617d8a70d0c97da76b905de9efb7128ad7085"},
     {file = "cryptography-3.4.8-cp36-abi3-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:1eb7bb0df6f6f583dd8e054689def236255161ebbcf62b226454ab9ec663746b"},
     {file = "cryptography-3.4.8-cp36-abi3-manylinux_2_24_x86_64.whl", hash = "sha256:9965c46c674ba8cc572bc09a03f4c649292ee73e1b683adb1ce81e82e9a6a0fb"},
+    {file = "cryptography-3.4.8-cp36-abi3-musllinux_1_1_aarch64.whl", hash = "sha256:3c4129fc3fdc0fa8e40861b5ac0c673315b3c902bbdc05fc176764815b43dd1d"},
     {file = "cryptography-3.4.8-cp36-abi3-musllinux_1_1_x86_64.whl", hash = "sha256:695104a9223a7239d155d7627ad912953b540929ef97ae0c34c7b8bf30857e89"},
     {file = "cryptography-3.4.8-cp36-abi3-win32.whl", hash = "sha256:21ca464b3a4b8d8e86ba0ee5045e103a1fcfac3b39319727bc0fc58c09c6aff7"},
     {file = "cryptography-3.4.8-cp36-abi3-win_amd64.whl", hash = "sha256:3520667fda779eb788ea00080124875be18f2d8f0848ec00733c0ec3bb8219fc"},
@@ -462,6 +471,10 @@ importlib-metadata = [
 jeepney = [
     {file = "jeepney-0.7.1-py3-none-any.whl", hash = "sha256:1b5a0ea5c0e7b166b2f5895b91a08c14de8915afda4407fb5022a195224958ac"},
     {file = "jeepney-0.7.1.tar.gz", hash = "sha256:fa9e232dfa0c498bd0b8a3a73b8d8a31978304dcef0515adc859d4e096f96f4f"},
+]
+json-fix = [
+    {file = "json_fix-0.1.3-py3-none-any.whl", hash = "sha256:ed9df777998527f4ea50cc771700c4ef8ead2b56284c40f486ed685971241981"},
+    {file = "json_fix-0.1.3.tar.gz", hash = "sha256:d999ac74f51441fdebef4a8ce90fbfb5520b29edc73d220b92ee7fefc1476b3b"},
 ]
 keyring = [
     {file = "keyring-23.2.1-py3-none-any.whl", hash = "sha256:bd2145a237ed70c8ce72978b497619ddfcae640b6dcf494402d5143e37755c6e"},

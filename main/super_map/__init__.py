@@ -1,3 +1,5 @@
+import json_fix
+
 def indent(string, by):
     indent_string = (" "*by)
     return indent_string + string.replace("\n", "\n"+indent_string)
@@ -279,6 +281,10 @@ class Map():
             else:
                 # TODO: should probably be an error
                 pass
+    
+    def __json__(self):
+        data, secrets = super().__getattribute__("d")
+        return data
 
 defaulters = {}
 class LazyDict(dict):
@@ -314,6 +320,11 @@ class LazyDict(dict):
     def merge(self, other_dict, **kwargs):
         self.__dict__.update(other_dict)
         self.__dict__.update(kwargs)
+        return self
+    
+    def update(self, other_dict):
+        for each_key, each_value in other_dict.items():
+            self[each_key] = each_value
         return self
     
     def setdefault(self, *args, **kwargs):

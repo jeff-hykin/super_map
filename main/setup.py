@@ -26,10 +26,7 @@ setuptools.setup(
     license=package_info["license"],
     packages=[package_info["name"]],
     install_requires=[
-        # examples:
-        # 'aiohttp >= 3.7.4',
-        # 'python-socketio >= 5.3.0',
-        # 'requests == 2.26.0',
+        'json-fix >= 0.1.3',
     ],
     classifiers=[
         # examples:
