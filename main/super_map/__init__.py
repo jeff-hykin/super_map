@@ -189,7 +189,7 @@ class Map():
         if key == Map.Dict:
             return data
         if key == Map.Merge:
-            return lambda *args: (data.update(each) for each in args) and self
+            return lambda *args: [ data.update(each) for each in args ] and self
         if key in Map.SecretKey.__subclasses__():
             return secrets[key]
         if key == Map.SecretKey:
