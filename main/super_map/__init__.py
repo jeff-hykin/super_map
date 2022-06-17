@@ -317,7 +317,7 @@ class LazyDict(dict):
     def __repr__(self):
         return self.__str__()
     
-    def merge(self, other_dict, **kwargs):
+    def merge(self, other_dict={}, **kwargs):
         self.__dict__.update(other_dict)
         self.__dict__.update(kwargs)
         return self
