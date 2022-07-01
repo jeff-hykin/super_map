@@ -208,7 +208,13 @@ def to_dict(obj):
             each: True
                 for each in obj
         }
-    
+
+def length(map):
+    return len(to_dict(map))
+
+def size(map):
+    return len(to_dict(map))
+
 def keys(map):
     return list(to_dict(map).keys())
 
@@ -241,6 +247,11 @@ def copy(map):
     
     return new_map
 
+def clear(map):
+    a_dict = to_dict(map)
+    a_dict.clear()
+    return map
+
 def sort_keys(map):
     a_dict = to_dict(map)
     keys = sorted(list(a_dict.keys()))
@@ -259,17 +270,28 @@ def sort_keys(map):
 #     pass
 
 # TODO
+# def grab(key_list, default):
+#     pass
+
+# TODO
+# def shove(key_list, value):
+#     pass
+
+# TODO
 # def recursive_merge(map):
 #     pass
 
 
 Object.to_dict   = to_dict
+Object.length    = length
+Object.size      = size
 Object.keys      = keys
 Object.values    = values
 Object.items     = items
 Object.overwrite = overwrite
 Object.merge     = merge
 Object.copy      = copy
+Object.clear     = clear
 Object.sort_keys = sort_keys
 
 def _indent(string, by):
