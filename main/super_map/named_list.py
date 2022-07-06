@@ -1,4 +1,15 @@
 def named_list(names):
+    """
+    Example:
+        Position = named_list(['x','y','z'])
+        a = Position([1,2,3])
+        print(a.x)   # 1
+        a.x = 4
+        print(a[0])  # 4
+        a[0] = 9
+        print(a.x)   # 9
+    """
+    
     class NamedList(list):
         def __getitem__(self, key):
             if isinstance(key, int):
