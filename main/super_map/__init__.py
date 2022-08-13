@@ -78,7 +78,7 @@ def stringify(value):
             from io import StringIO
             import builtins
             string_stream = StringIO()
-            builtins.print(*args, **kwargs, file=string_stream)
+            builtins.print(value, file=string_stream)
             debug_string = string_stream.getvalue()
         
         # TODO: handle "<slot wrapper '__repr__' of 'object' objects>"
