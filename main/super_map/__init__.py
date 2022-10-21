@@ -4,37 +4,40 @@ def indent(string, by):
     indent_string = (" "*by)
     return indent_string + string.replace("\n", "\n"+indent_string)
 
-def stringify(value):
-    onelineify_threshold = 50 # characters (of inner content)
+def stringify(value, onelineify_threshold=None):
+    if onelineify_threshold is None: onelineify_threshold = stringify.onelineify_threshold
+    
     length = 0
     if isinstance(value, str):
-        return f'"{value}"'
-    elif isinstance(value, Map):
-        if len(value) == 0:
-            return "{}"
-        items = value if isinstance(value, Map) else value.items()
-        output = "{\n"
-        for each_key, each_value in items:
-            element_string = stringify(each_key) + ": " + stringify(each_value)
-            length += len(element_string)+2
-            output += indent(element_string, by=4) + ", \n"
-        output += "}"
-        if length < onelineify_threshold:
-            output = output.replace("\n    ","").replace("\n","")
-        return output
+        return repr(value)
     elif isinstance(value, dict):
         if len(value) == 0:
             return "{}"
-        items = value if isinstance(value, Map) else value.items()
-        output = "{\n"
-        for each_key, each_value in items:
-            element_string = stringify(each_key) + ": " + stringify(each_value)
-            length += len(element_string)+2
-            output += indent(element_string, by=4) + ", \n"
-        output += "}"
-        if length < onelineify_threshold:
-            output = output.replace("\n    ","").replace("\n","")
-        return output
+        else:
+            # if all string keys and all identifiers
+            if all(isinstance(each, str) and each.isidentifier() for each in value.keys()):
+                items = value.items()
+                output = "dict(\n"
+                for each_key, each_value in items:
+                    element_string = repr(each_key) + "=" + stringify(each_value)
+                    length += len(element_string)+2
+                    output += indent(element_string, by=4) + ", \n"
+                output += ")"
+                if length < onelineify_threshold:
+                    output = output.replace("\n    ","").replace("\n","")
+                return output
+            # more complicated mapping
+            else:
+                items = value.items()
+                output = "{\n"
+                for each_key, each_value in items:
+                    element_string = stringify(each_key) + ": " + stringify(each_value)
+                    length += len(element_string)+2
+                    output += indent(element_string, by=4) + ", \n"
+                output += "}"
+                if length < onelineify_threshold:
+                    output = output.replace("\n    ","").replace("\n","")
+                return output
     elif isinstance(value, list):
         if len(value) == 0:
             return "[]"
@@ -103,6 +106,7 @@ def stringify(value):
                 return f'{name}(from="{parts_str}")'
         
         return debug_string
+stringify.onelineify_threshold = 50
 
 class Map():
     class SecretKey: pass
