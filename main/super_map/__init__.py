@@ -1,4 +1,7 @@
-import json_fix
+try:
+    import json_fix
+except Exception as error:
+    pass
 
 def indent(string, by):
     indent_string = (" "*by)
