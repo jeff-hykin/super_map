@@ -293,6 +293,28 @@ class Map():
         data, secrets = super().__getattribute__("d")
         return data
 
+def recursive_lazy_dict(value):
+    have_seen = set()
+    def _inner_recursive_lazy_dict(value):
+        # not perfect because there are other data structures, but its pretty useful
+        if isinstance(value, (set, list, dict)):
+            if id(value) in have_seen:
+                return value
+            else:
+                have_seen.add(id(value))
+                if isinstance(value, list):
+                    return [ _inner_recursive_lazy_dict(each) for each in value ]
+                elif isinstance(value, set):
+                    return set(_inner_recursive_lazy_dict(each) for each in value)
+                elif isinstance(value, dict):
+                    new_dict = LazyDict()
+                    for each_key, each_value in value.items():
+                        new_dict[each_key] = _inner_recursive_lazy_dict(each_value)
+                    return new_dict
+        else:
+            return value
+    return _inner_recursive_lazy_dict(value)
+
 defaulters = {}
 class LazyDict(dict):
     
