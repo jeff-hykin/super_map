@@ -365,4 +365,18 @@ class LazyDict(dict):
                 defaulters[id(self)] = lambda key: args[0]
             return self
         else:
-            return self.__dict__.setdefault(*args, **kwargs)
+            return super(LazyDict, self).setdefault(*args, **kwargs)
+    
+    def __copy__(self):
+        return LazyDict(self.__dict__)
+    
+    def __deepcopy__(self, memo):
+        from copy import deepcopy
+        
+        address = id(self)
+        if address in memo:
+            return memo[address]
+        new = memo[address] = LazyDict(self.__dict__)
+        for each_key, each_value in new.items():
+            new[each_key] = deepcopy(each_value, memo)
+        return new
