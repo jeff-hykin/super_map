@@ -302,21 +302,29 @@ MapCls = Map
 Map = MapKeys()
 import builtins
 real_isinstance = builtins.isinstance
+type_mappings = {}
 def isinstance(value, types):
-    if types == Map:
-        return real_isinstance(value, MapCls)
-    elif real_isinstance(types, tuple) and MapCls in types:
-        return real_isinstance(value, tuple((each if each != Map else MapCls) for each in types))
-    else:
-        return real_isinstance(value, types)
+    if not real_isinstance(types, tuple):
+        types = (types, )
+    return real_isinstance(
+        value,
+        tuple(type_mappings.get(each, each) for each in types),
+    )
 isinstance.__doc__ = real_isinstance.__doc__
 builtins.isinstance = isinstance
 real_type = builtins.type
-def type(*args,**kwargs):
-    normal_output = real_type(*args, **kwargs)
-    return normal_output if normal_output != MapCls else Map
-type.__doc__ = real_type.__doc__
+class type(real_type):
+    def __new__(cls, *args, **kwargs):
+        normal_output = real_type(*args, **kwargs)
+        return type_mappings.get(normal_output, normal_output)
+for each in dir(real_type):
+    try:
+        setattr(type, getattr(real_type, each))
+    except Exception as error:
+        pass
 builtins.type = type
+type_mappings[Map] = MapCls
+type_mappings[type] = real_type
 
 class LazyIterable:
     def __init__(self, iterable, length):
@@ -416,7 +424,13 @@ class SemiLazyMap:
             output = data[key]
             if callable(output):
                 if key not in cache:
-                    cache[key] = output(key)
+                    try:
+                        cache[key] = output(key)
+                    except TypeError as error:
+                        if f"{error}" == '<lambda>() takes 0 positional arguments but 1 was given':
+                            cache[key] = output()
+                        else:
+                            raise error
                 return cache[key]
             else:
                 return output
