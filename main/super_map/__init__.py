@@ -353,7 +353,7 @@ class SemiLazyMap:
         data.update(kwargs)
         if isinstance(first_arg, dict):
             data.update(first_arg)
-        elif isinstance(first_arg, Map):
+        elif isinstance(first_arg, MapCls):
             data.update(first_arg[MapKeys.Dict])
         
     
