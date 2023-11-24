@@ -335,7 +335,7 @@ class LazyIterable:
         self.length = length
     
     def __iter__(self):
-        return (each for each in self.iterable)
+        return iter(each for each in self.iterable)
     
     def __len__(self):
         return self.length
@@ -486,13 +486,13 @@ class SemiLazyMap:
     
     def __iter__(self):
         data, secrets, cache = super().__getattribute__("d")
-        return LazyIterable(
+        return iter(LazyIterable(
             iterable=zip(
                 data.keys(),
                 (self[each] for each in data.keys()),
             ),
             length=len(self),
-        )
+        ))
     
     def __reversed__(self):
         data, secrets, cache = super().__getattribute__("d")
