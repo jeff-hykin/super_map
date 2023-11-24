@@ -314,6 +314,7 @@ isinstance.__doc__ = real_isinstance.__doc__
 builtins.isinstance = isinstance
 real_type = builtins.type
 class type(real_type):
+    __dict__ = real_type.__dict__["__dict__"]
     def __new__(cls, *args, **kwargs):
         normal_output = real_type(*args, **kwargs)
         return type_mappings.get(normal_output, normal_output)
@@ -321,7 +322,7 @@ for each_key, each_value in real_type.__dict__.items():
     type.__dict__[each_key] = each_value
 for each in dir(real_type):
     try:
-        setattr(type,  r(real_type, each))
+        setattr(type, getattr(real_type, each))
     except Exception as error:
         pass
 builtins.type = type
