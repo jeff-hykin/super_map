@@ -300,32 +300,32 @@ class Map:
 # Patch up isinstance() and type() so that Map can appear to have class-attributes without then becoming instance attributes
 MapCls = Map
 Map = MapKeys()
-import builtins
-real_isinstance = builtins.isinstance
-type_mappings = {}
-def isinstance(value, types):
-    if not real_isinstance(types, tuple):
-        types = (types, )
-    return real_isinstance(
-        value,
-        tuple(type_mappings.get(each, each) for each in types),
-    )
-isinstance.__doc__ = real_isinstance.__doc__
-builtins.isinstance = isinstance
-real_type = builtins.type
-class type(real_type):
-    __dict__ = real_type.__dict__["__dict__"]
-    def __new__(cls, *args, **kwargs):
-        normal_output = real_type(*args, **kwargs)
-        return type_mappings.get(normal_output, normal_output)
-for each in dir(real_type):
-    try:
-        setattr(type, getattr(real_type, each))
-    except Exception as error:
-        pass
-builtins.type = type
-type_mappings[Map] = MapCls
-type_mappings[type] = real_type
+# import builtins
+# real_isinstance = builtins.isinstance
+# type_mappings = {}
+# def isinstance(value, types):
+#     if not real_isinstance(types, tuple):
+#         types = (types, )
+#     return real_isinstance(
+#         value,
+#         tuple(type_mappings.get(each, each) for each in types),
+#     )
+# isinstance.__doc__ = real_isinstance.__doc__
+# builtins.isinstance = isinstance
+# real_type = builtins.type
+# class type(real_type):
+#     __dict__ = real_type.__dict__["__dict__"]
+#     def __new__(cls, *args, **kwargs):
+#         normal_output = real_type(*args, **kwargs)
+#         return type_mappings.get(normal_output, normal_output)
+# for each in dir(real_type):
+#     try:
+#         setattr(type, getattr(real_type, each))
+#     except Exception as error:
+#         pass
+# builtins.type = type
+# type_mappings[Map] = MapCls
+# type_mappings[type] = real_type
 
 class LazyIterable:
     def __init__(self, iterable, length):
