@@ -385,6 +385,8 @@ class SemiLazyMap:
         # FUTURE: have key be super-hashed, use ID's for anything that can't be yaml-serialized
         #         difficulty of implementation will be doing that^ without screwing up .keys()
         data, secrets, cache = super().__getattribute__("d")
+        if key in cache:
+            del cache[key]
         if secrets[MapKeys.Untouched] and MapKeys.ParentCallbacks in secrets:
             for each_parent, each_key in secrets[MapKeys.ParentCallbacks]:
                 each_parent[each_key] = self
